@@ -7,6 +7,7 @@
   "app": {
     "windows": [{
       "label": "main",
+      "create": false,
       "title": "مدار | روبو",
       "width": 1180,
       "height": 820,
