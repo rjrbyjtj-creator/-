@@ -4,32 +4,37 @@ A lightweight Windows desktop shell for the online Madar Robo experience.
 
 ## Current architecture
 
-- Tauri 2 desktop shell.
-- A small local startup screen with the Madar M mark and square loader.
-- Login and chatbot remain hosted by GitHub Pages.
+- Tauri 2 desktop shell for Windows.
+- Local Persian startup screen with the Madar M mark and square loader.
+- Branded M application icon generated from the SVG source during the build.
+- Login and chatbot remain hosted by the official Madar GitHub Pages site.
 - Authentication and chatbot APIs continue to use the existing Madar services.
+- The WebView allows top-level navigation only to the local app and the Madar GitHub Pages host.
 - No credentials, API keys, or user data are bundled here.
 
 ## Windows build
 
-GitHub Actions builds both NSIS EXE and MSI installers.
+GitHub Actions builds both NSIS EXE and MSI installers automatically on pushes to `main`, and on version tags such as `v0.1.0`.
 
 1. Open the repository Actions tab.
 2. Select Build Windows installer.
-3. Click Run workflow on the main branch.
-4. After a successful run, open it and download madar-robo-windows-installers under Artifacts.
+3. Open the latest successful run.
+4. Download `madar-robo-windows-installers` under Artifacts.
 
-Pushing a tag such as v0.1.0 also creates a GitHub Release with installers attached.
+A version tag also creates a GitHub Release with the installers attached. Manual runs are available through **Run workflow**.
 
-## Required website integration
+## Website integration
 
-The current login page redirects regular users to the normal dashboard. The desktop entry URL includes the query parameter desktop=1, reserved for a narrowly scoped desktop-only routing branch. That branch still needs to be added to the main Madar-F login page so that successful login and session restoration send regular users to the online chatbot. Without that small website-side change, the app will open the normal dashboard after login.
+The main Madar-F login page has a desktop-only routing branch:
 
-The normal browser flow must remain unchanged when desktop=1 is absent.
+- Regular users who enter through `?desktop=1` are sent directly to the online Robo chatbot after login.
+- Existing valid regular-user sessions are also sent directly to Robo.
+- Admin accounts retain the existing admin-dashboard route.
+- Normal browser login behaviour remains unchanged when `desktop=1` is absent.
 
 ## Session behaviour
 
-The app uses the WebView website profile. The site's existing Remember me option remains authoritative: remembered sessions use localStorage; unremembered sessions use sessionStorage and should be treated as temporary. Do not assume an unremembered session survives an application restart.
+The app uses the website's WebView profile. The site's existing **Remember me** option remains authoritative: remembered sessions use `localStorage`; unremembered sessions use `sessionStorage` and should be treated as temporary. Do not assume an unremembered session survives an application restart.
 
 ## Security
 
