@@ -102,6 +102,17 @@ fn main() {
                   }
                 });
                 document.body.appendChild(button);
+                const checkForUpdate = () => window.__TAURI__.core.invoke('check_for_update')
+                  .then(update => {
+                    if (update) {
+                      button.textContent = '⬆  نسخه جدید آماده است';
+                      button.style.background = '#d8b65e';
+                      button.style.color = '#171b25';
+                    }
+                  })
+                  .catch(error => console.debug('Madar updater check:', error));
+                checkForUpdate();
+                window.setInterval(checkForUpdate, 30 * 60 * 1000);
               })();
             "#;
 
