@@ -41,3 +41,13 @@ The app uses the website's WebView profile. The site's existing **Remember me** 
 - No CORS bypass or disabled web security.
 - No admin credentials or tokens are stored in the desktop app.
 - Intended for regular student accounts, not the admin dashboard.
+
+
+## In-app desktop updates
+
+- A persistent update shortcut is injected only into pages served by the official Madar GitHub Pages origin.
+- The shortcut opens a local, branded updater window.
+- The updater checks the latest GitHub Release and verifies signed update packages using Tauri's updater plugin.
+- Windows update bundles and signatures are attached to tagged GitHub Releases when signing is configured.
+- Configure the repository Actions secrets `TAURI_SIGNING_PRIVATE_KEY` and `TAURI_SIGNING_PRIVATE_KEY_PASSWORD`, and place the matching public key in `src-tauri/tauri.conf.json` before publishing signed updates.
+- Never commit or share the private signing key. Keep a secure backup: losing it prevents future updates for installations that trust the corresponding public key.
