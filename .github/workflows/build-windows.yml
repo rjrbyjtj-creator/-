@@ -6,6 +6,9 @@ on:
     tags: ["v*"]
 permissions:
   contents: write
+concurrency:
+  group: madar-desktop-build-${{ github.ref }}
+  cancel-in-progress: true
 jobs:
   build:
     runs-on: windows-latest
@@ -34,6 +37,35 @@ jobs:
             Write-Host "Updater signing secret is not configured yet; building standard installers."
             npm run build
           }
+      - name: Create updater manifest
+        if: env.TAURI_SIGNING_PRIVATE_KEY != ''
+        shell: pwsh
+        run: |
+          $config = Get-Content "src-tauri/tauri.conf.json" -Raw | ConvertFrom-Json
+          $version = $config.version
+          $tag = "v$version"
+          $bundleRoot = "src-tauri/target/release/bundle"
+          $platforms = @{}
+          $packages = @(
+            @{ folder = "nsis"; pattern = "*.nsis.zip"; target = "windows-x86_64-nsis" },
+            @{ folder = "msi"; pattern = "*.msi.zip"; target = "windows-x86_64-msi" }
+          )
+          foreach ($package in $packages) {
+            $file = Get-ChildItem (Join-Path $bundleRoot $package.folder) -Filter $package.pattern | Select-Object -First 1
+            if (-not $file) { throw "Missing updater package for $($package.target)" }
+            $signaturePath = "$($file.FullName).sig"
+            if (-not (Test-Path $signaturePath)) { throw "Missing signature: $signaturePath" }
+            $signature = (Get-Content $signaturePath -Raw).Trim()
+            $url = "https://github.com/rjrbyjtj-creator/-/releases/download/$tag/$($file.Name)"
+            $platforms[$package.target] = @{ url = $url; signature = $signature }
+          }
+          $manifest = @{
+            version = $version
+            notes = "بهبود عملکرد و اصلاحات برنامه مدار"
+            pub_date = (Get-Date).ToUniversalTime().ToString("o")
+            platforms = $platforms
+          }
+          $manifest | ConvertTo-Json -Depth 8 | Set-Content (Join-Path $bundleRoot "latest.json") -Encoding utf8
       - name: Upload installer artifacts
         uses: actions/upload-artifact@v4
         with:
