@@ -1,0 +1,15 @@
+/* MADAR — animated M logo page loader */
+#madar-page-loader{--mpl-bg:#141416;--mpl-logo:#fff;position:fixed;inset:0;z-index:2147483000;display:grid;place-items:center;isolation:isolate;overflow:hidden;pointer-events:none;background:var(--mpl-bg);opacity:0;visibility:hidden;transition:opacity .45s ease,visibility .45s}
+#madar-page-loader.on{opacity:1;visibility:visible;pointer-events:auto}
+#madar-page-loader.leaving{opacity:0;visibility:visible;pointer-events:none}
+#madar-page-loader .mpl-stage{width:120px;max-width:32vw;opacity:0;transform:scale(.92);filter:blur(7px);transition:opacity .35s ease,transform .45s cubic-bezier(.2,.8,.2,1),filter .35s ease}
+#madar-page-loader.on .mpl-stage{opacity:1;transform:scale(1);filter:blur(0)}
+#madar-page-loader.leaving .mpl-stage{opacity:0;transform:scale(1.04);filter:blur(5px)}
+#madar-page-loader svg{display:block;width:100%;height:auto;overflow:visible}
+#madar-page-loader .ghost{fill:var(--mpl-logo);opacity:.07}
+#madar-page-loader .draw{fill:none;stroke:var(--mpl-logo);stroke-width:110;stroke-linejoin:round;stroke-linecap:butt;stroke-dasharray:1 1;stroke-dashoffset:1;animation:2.8s infinite}
+#madar-page-loader .draw.outer{animation-name:madar-draw-outer}
+#madar-page-loader .draw.inner{animation-name:madar-draw-inner}
+@keyframes madar-draw-outer{0%{stroke-dashoffset:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}40%{stroke-dashoffset:0}72%{stroke-dashoffset:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100%{stroke-dashoffset:-1}}
+@keyframes madar-draw-inner{0%,14%{stroke-dashoffset:1;animation-timing-function:cubic-bezier(.65,0,.35,1)}48%{stroke-dashoffset:0}72%{stroke-dashoffset:0;animation-timing-function:cubic-bezier(.65,0,.35,1)}100%{stroke-dashoffset:-1}}
+@media(prefers-reduced-motion:reduce){#madar-page-loader .mpl-stage{opacity:1;transform:none;filter:none}#madar-page-loader .draw{animation:none;stroke-dashoffset:0}}
