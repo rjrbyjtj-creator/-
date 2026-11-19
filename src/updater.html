@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="fa" dir="rtl">
+<head>
+<meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#0c1222"><title>به‌روزرسانی مدار</title>
+<style>
+:root{color-scheme:dark;font-family:Tahoma,Arial,sans-serif;background:#0c1222;color:#f4f6fb}
+*{box-sizing:border-box}
+body{margin:0;min-height:100vh;padding:28px;background:radial-gradient(ellipse at 85% 0%,#1b2b4b 0,transparent 48%),#0c1222}
+main{max-width:500px;margin:0 auto}.top{display:flex;align-items:center;gap:13px;margin:6px 0 30px}
+.logo{width:48px;height:48px;border:1px solid #b99a52;border-radius:14px;display:grid;place-items:center;color:#e6c879;font-size:25px;font-weight:bold}
+h1{font-size:19px;margin:0 0 5px}.muted{color:#9ca8bd;font-size:12px;line-height:1.9}
+.panel{padding:22px;border:1px solid #263653;border-radius:18px;background:rgba(19,30,51,.9);box-shadow:0 18px 50px #0003}
+.status{display:flex;align-items:center;justify-content:space-between;margin-bottom:14px}
+.tag{font-size:11px;color:#e8cc82;border:1px solid #66552f;border-radius:99px;padding:5px 9px}
+.version{font-size:30px;font-weight:700;letter-spacing:.3px;margin:8px 0}
+.notes{white-space:pre-wrap;font-size:13px;line-height:2;color:#c8d0df;min-height:45px;margin:14px 0}
+button{width:100%;border:0;border-radius:11px;padding:13px 16px;background:#d8b65e;color:#171b25;font:700 13px Tahoma;cursor:pointer}
+button:disabled{opacity:.55;cursor:wait}.secondary{margin-top:10px;background:#202d46;color:#dbe3f1}
+#progress{height:5px;background:#263653;border-radius:9px;overflow:hidden;margin:12px 0 6px;display:none}
+#bar{height:100%;width:0;background:#d8b65e;transition:width .2s}
+#error{color:#f2a6a6;font-size:12px;line-height:1.8;display:none;margin-top:12px}
+footer{margin-top:18px;text-align:center;color:#74829a;font-size:11px}
+</style></head>
+<body><main>
+<header class="top"><div class="logo">M</div><div><h1>به‌روزرسانی مدار</h1><div class="muted">مدیریت نسخه دسکتاپ روبو</div></div></header>
+<section class="panel">
+<div class="status"><strong>وضعیت برنامه</strong><span class="tag" id="tag">در حال بررسی</span></div>
+<div class="muted">نسخه نصب‌شده</div><div class="version">0.2.0</div>
+<div class="muted" id="summary">در حال اتصال امن به سرور انتشار نسخه‌ها…</div>
+<div class="notes" id="notes"></div>
+<div id="progress"><div id="bar"></div></div><div class="muted" id="progressText"></div>
+<button id="install" disabled>بررسی نسخه جدید</button><button class="secondary" id="again">بررسی مجدد</button>
+<div id="error"></div></section>
+<footer>به‌روزرسانی‌ها فقط پس از تأیید امضای دیجیتال نصب می‌شوند.</footer>
+</main>
+<script>
+const invoke=window.__TAURI__.core.invoke,tag=document.getElementById('tag'),summary=document.getElementById('summary'),notes=document.getElementById('notes'),install=document.getElementById('install'),errorBox=document.getElementById('error');
+let available=false;
+function showError(message){errorBox.style.display='block';errorBox.textContent=String(message||'خطای ناشناخته');}
+async function check(){
+ available=false;errorBox.style.display='none';install.disabled=true;install.textContent='در حال بررسی…';tag.textContent='در حال بررسی';summary.textContent='در حال بررسی آخرین نسخه منتشرشده…';notes.textContent='';
+ try{const update=await invoke('check_for_update');if(update){available=true;tag.textContent='نسخه جدید';summary.textContent='نسخه '+update.version+' برای نصب آماده است.';notes.textContent=update.notes||'بهبودها و اصلاحات برنامه در این نسخه.';install.textContent='دریافت و نصب نسخه '+update.version;install.disabled=false;}else{tag.textContent='به‌روز';summary.textContent='در حال حاضر از آخرین نسخه استفاده می‌کنید.';install.textContent='بررسی نسخه جدید';install.disabled=false;}}
+ catch(e){tag.textContent='عدم دسترسی';summary.textContent='بررسی نسخه جدید انجام نشد.';install.textContent='تلاش دوباره';install.disabled=false;showError(e);}
+}
+async function installUpdate(){
+ if(!available){await check();return;}errorBox.style.display='none';install.disabled=true;install.textContent='در حال دانلود و نصب…';tag.textContent='در حال به‌روزرسانی';summary.textContent='لطفاً برنامه را نبندید. پس از نصب، برنامه دوباره اجرا می‌شود.';document.getElementById('progress').style.display='block';document.getElementById('bar').style.width='35%';
+ try{await invoke('install_update');}catch(e){install.disabled=false;install.textContent='تلاش دوباره برای نصب';tag.textContent='ناموفق';showError(e);}
+}
+install.addEventListener('click',installUpdate);document.getElementById('again').addEventListener('click',check);check();
+</script></body></html>
