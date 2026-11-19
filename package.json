@@ -5,7 +5,7 @@
   "type": "module",
   "scripts": {
     "tauri": "tauri",
-    "build": "tauri icon src-tauri/icons/madar-m.svg && tauri build"
+    "build": "tauri icon src-tauri/icons/madar-desktop.png && tauri build"
   },
   "devDependencies": {
     "@tauri-apps/cli": "^2.0.0"
