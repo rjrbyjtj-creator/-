@@ -3,6 +3,11 @@
   "private": true,
   "version": "0.1.0",
   "type": "module",
-  "scripts": { "tauri": "tauri", "build": "tauri build" },
-  "devDependencies": { "@tauri-apps/cli": "^2.0.0" }
+  "scripts": {
+    "tauri": "tauri",
+    "build": "tauri icon src-tauri/icons/madar-m.svg && tauri build"
+  },
+  "devDependencies": {
+    "@tauri-apps/cli": "^2.0.0"
+  }
 }
