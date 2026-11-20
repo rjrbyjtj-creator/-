@@ -45,7 +45,7 @@
   },
   "plugins": {
     "updater": {
-      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDA0NkUyN0YyQzZDQ0JCRjYKUldUMnU4ekc4aWR1QkE0R2kvcTRxaURMOVFBVTk0TVBNdnllQzY0MXJFd2NsUzdyOEpQVEVUUGkK",
+      "pubkey": "dW50cnVzdGVkIGNvbW1lbnQ6IG1pbmlzaWduIHB1YmxpYyBrZXk6IDcxM0MwNTcyQUJFQTJBQUQKUldTdEt1cXJjZ1U4Y2EwS0lCOWFHaDhqUHA0bEEzTGdjYjFzekUrbTJmTVVjNERzelUrKzYvQlAK",
       "endpoints": [
         "https://github.com/rjrbyjtj-creator/-/releases/latest/download/latest.json"
       ],
