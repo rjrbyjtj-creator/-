@@ -32,7 +32,9 @@ jobs:
         shell: pwsh
         run: |
           if ($env:TAURI_SIGNING_PRIVATE_KEY) {
-            npm run build -- --config '{"bundle":{"createUpdaterArtifacts":true}}'
+            $updaterConfig = @{ bundle = @{ createUpdaterArtifacts = $true } } | ConvertTo-Json -Compress
+            Set-Content -Path "src-tauri/tauri.updater.conf.json" -Value $updaterConfig -Encoding utf8
+            npm run build -- --config src-tauri/tauri.updater.conf.json
           } else {
             Write-Host "Updater signing secret is not configured yet; building standard installers."
             npm run build
