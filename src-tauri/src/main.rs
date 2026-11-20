@@ -3,7 +3,7 @@
 use serde::Serialize;
 use tauri::{
     utils::config::WebviewUrl,
-    webview::{PageLoadEvent, WebviewWindowBuilder},
+    webview::WebviewWindowBuilder,
     Manager,
 };
 use tauri_plugin_updater::UpdaterExt;
