@@ -55,7 +55,9 @@ jobs:
           $signaturePath = "$($file.FullName).sig"
           if (-not (Test-Path $signaturePath)) { throw "Missing signature: $signaturePath" }
           $signature = (Get-Content $signaturePath -Raw).Trim()
-          $url = "https://github.com/rjrbyjtj-creator/-/releases/download/$tag/$($file.Name)"
+          # Release asset names use dots in the product name; normalize spaces to match the published asset name.
+          $assetName = $file.Name -replace " ", "."
+          $url = "https://github.com/rjrbyjtj-creator/-/releases/download/$tag/$assetName"
           $platforms = @{
             "windows-x86_64" = @{ url = $url; signature = $signature }
           }
