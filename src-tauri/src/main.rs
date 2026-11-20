@@ -3,8 +3,7 @@
 use serde::Serialize;
 use tauri::{
     utils::config::WebviewUrl,
-    webview::WebviewWindowBuilder,
-    Manager,
+    webview::WebviewWindowBuilder
 };
 use tauri_plugin_updater::UpdaterExt;
 
@@ -56,8 +55,6 @@ async fn install_update(app: tauri::AppHandle) -> Result<(), String> {
     app.restart();
 }
 
-#[tauri::command]
-
 fn main() {
     tauri::Builder::default()
         .plugin(tauri_plugin_updater::Builder::new().build())
@@ -83,14 +80,6 @@ fn main() {
                         && host == "rjrbyjtj-creator.github.io";
 
                     is_local_app || is_madar_site
-                })
-                .on_page_load(move |window, payload| {
-                    if payload.event() == PageLoadEvent::Finished
-                        && payload.url().scheme() == "https"
-                        && payload.url().host_str() == Some("rjrbyjtj-creator.github.io")
-                    {
-                        let _ = window.eval(updater_button);
-                    }
                 })
                 .build()?;
 
