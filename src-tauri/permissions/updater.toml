@@ -1,0 +1,14 @@
+[[permission]]
+identifier = "allow-check-for-update"
+description = "Allows checking for Madar desktop updates."
+commands.allow = ["check_for_update"]
+
+[[permission]]
+identifier = "allow-install-update"
+description = "Allows installing a verified Madar desktop update."
+commands.allow = ["install_update"]
+
+[[permission]]
+identifier = "allow-get-app-version"
+description = "Allows reading the Madar desktop app version."
+commands.allow = ["get_app_version"]
