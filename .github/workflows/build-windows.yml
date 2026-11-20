@@ -48,18 +48,16 @@ jobs:
           $tag = "v$version"
           $bundleRoot = "src-tauri/target/release/bundle"
           $platforms = @{}
-          $packages = @(
-            @{ folder = "nsis"; pattern = "*.nsis.zip"; target = "windows-x86_64-nsis" },
-            @{ folder = "msi"; pattern = "*.msi.zip"; target = "windows-x86_64-msi" }
-          )
-          foreach ($package in $packages) {
-            $file = Get-ChildItem (Join-Path $bundleRoot $package.folder) -Filter $package.pattern | Select-Object -First 1
-            if (-not $file) { throw "Missing updater package for $($package.target)" }
-            $signaturePath = "$($file.FullName).sig"
-            if (-not (Test-Path $signaturePath)) { throw "Missing signature: $signaturePath" }
-            $signature = (Get-Content $signaturePath -Raw).Trim()
-            $url = "https://github.com/rjrbyjtj-creator/-/releases/download/$tag/$($file.Name)"
-            $platforms[$package.target] = @{ url = $url; signature = $signature }
+          # Tauri v2 current updater artifacts on Windows are the installer files themselves,
+          # signed as .exe.sig / .msi.sig (not .nsis.zip / .msi.zip).
+          $file = Get-ChildItem (Join-Path $bundleRoot "nsis") -Filter "*.exe" | Select-Object -First 1
+          if (-not $file) { throw "Missing NSIS installer for windows-x86_64" }
+          $signaturePath = "$($file.FullName).sig"
+          if (-not (Test-Path $signaturePath)) { throw "Missing signature: $signaturePath" }
+          $signature = (Get-Content $signaturePath -Raw).Trim()
+          $url = "https://github.com/rjrbyjtj-creator/-/releases/download/$tag/$($file.Name)"
+          $platforms = @{
+            "windows-x86_64" = @{ url = $url; signature = $signature }
           }
           $manifest = @{
             version = $version
